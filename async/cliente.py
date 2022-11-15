@@ -15,12 +15,11 @@ if __name__ == "__main__":
 
 
     s.connect((args.host, args.port))  
-    print(s)
     while True:
         datos=input(">")
-        s.sendall(datos)
+        s.send(bytes(datos.encode('utf-8')))
         mensaje=s.recv(1024)
         print (mensaje.decode('utf-8'))
-        s.close()
+
 
 

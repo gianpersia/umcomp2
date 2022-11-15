@@ -1,6 +1,7 @@
 import asyncio
 import os
 import subprocess
+import argparse as ap
 
 async def ejecutor(reader, writer):
     while True:
@@ -24,14 +25,17 @@ async def ejecutor(reader, writer):
         
         await writer.drain()
 
-async def main():
-    server = await asyncio.start_server(ejecutor, '127.0.0.1', 8888)
-
-    addr = server.sockets[0].getsockname()
-    #print(f'Serving on {addr} {asyncio.current_task()}')
+async def main(port):
+    server = await asyncio.start_server(ejecutor, '127.0.0.1', port)
 
     async with server:
-        print(f"Tareas:\n{asyncio.all_tasks()}")
         await server.serve_forever()
 
-asyncio.run(main())
+
+
+if __name__ == "__main__":
+    parser = ap.ArgumentParser(description="serversocket")
+    parser.add_argument("-p", "--port", type=int,
+        help="Puerto deseado: ", required=True)
+    args=parser.parse_args()
+    asyncio.run(main(args.port))
